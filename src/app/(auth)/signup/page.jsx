@@ -1,9 +1,13 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function SignUpOne() {
+  const {data}= useSession()
+  if(data){
+    redirect("/home")
+  }
   const {
     register,
     handleSubmit,

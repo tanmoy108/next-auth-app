@@ -11,24 +11,47 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log(user)
-      console.log(account)
-      console.log(profile)
-      console.log(email)
-      console.log(credentials)
+      console.log("user: ",user)
+      console.log("account: ",account)
+      console.log("profile: ",profile)
+      console.log("email: ",email)
+      console.log("credentials: ",credentials)
       try {
-        const userEmail = profile.email || user.email;
+        const userEmail = user.email;
 
         if(!userEmail) return false
         const existingUser = await users.findOne({ email: user.email });          
         if (existingUser) return true;
-        await users.create({name: user.name, email: userEmail,pending:false})
+        await users.create({name: user.name, email: userEmail,pending:false,medium:account.provider})
         return true;
       } catch (error) {
         console.log("errorrr:", error);
         return false;
       }
     },
+
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log("token22",token)
+      console.log("user22",user)
+      console.log("account22: ",account)
+      console.log("profile22: ",profile)
+      console.log("isNewUser22: ",isNewUser)
+      if(user){
+        user.role = user?.role == null ? "users": user?.role
+        token.user = user
+      }
+      console.log("token update: ",token)
+      return token
+    },
+    async session({ session, user, token }) {
+      console.log("session33",session)
+      console.log("user33",user)
+      console.log("token33",token)
+      
+      session.user = token.user
+      return session
+    }
+ 
   },
   providers: [
     CredentialsProvider({

@@ -8,6 +8,8 @@ const userSchema = new Schema({
   email: { type: String, trim: true, unique: true },
   password: { type: String, required: false },
   pending: { type: Boolean, default: true },
+  role:{type:String,default:"user"},
+  medium:{type:String,default:"email"}
 });
 
 userSchema.methods.generateAuthToken = function () {
